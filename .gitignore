@@ -2,3 +2,4 @@
 *.meta
 .gitattributes
 *.unity
+*.prefab
