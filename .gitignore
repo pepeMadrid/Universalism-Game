@@ -3,3 +3,7 @@
 .gitattributes
 *.unity
 *.prefab
+*.png
+*.flac
+*.ogg
+*.mp3
