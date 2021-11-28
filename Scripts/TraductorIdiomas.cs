@@ -19,9 +19,9 @@ public class TraductorIdiomas : MonoBehaviour
     {
         //ESP
         ArrayList ESPtextosArray = new ArrayList();
-        ESPtextosArray.Add(new Texto("Inicio", "Esto es el inicio del juego"));
-        ESPtextosArray.Add(new Texto("ErrorNombreExiste", "Ya existe una partida con ese nombre, por favor introduce otro nombre"));
-        Textos ESPtextos = new Textos(1, ESPtextosArray);
+        ESPtextosArray.Add(new TextoObject("Inicio", "Esto es el inicio del juego"));
+        ESPtextosArray.Add(new TextoObject("ErrorNombreExiste", "Ya existe una partida con ese nombre, por favor introduce otro nombre"));
+        BDOTextos ESPtextos = new BDOTextos(1, ESPtextosArray);
 
         if (!File.Exists(Application.persistentDataPath + archivoESP))
         {
@@ -36,9 +36,9 @@ public class TraductorIdiomas : MonoBehaviour
 
         //Ingles
         ArrayList InglestextosArray = new ArrayList();
-        InglestextosArray.Add(new Texto("Inicio", "This is the start of the game"));
-        InglestextosArray.Add(new Texto("ErrorNombreExiste", "There is already a game with that name, please enter another name"));
-        Textos Inglestextos = new Textos(0, InglestextosArray);
+        InglestextosArray.Add(new TextoObject("Inicio", "This is the start of the game"));
+        InglestextosArray.Add(new TextoObject("ErrorNombreExiste", "There is already a game with that name, please enter another name"));
+        BDOTextos Inglestextos = new BDOTextos(0, InglestextosArray);
 
         if (!File.Exists(Application.persistentDataPath + archivoIngles))
         {
@@ -63,17 +63,17 @@ public class TraductorIdiomas : MonoBehaviour
 
         BinaryFormatter bf;
         FileStream file;
-        Textos archivoTextos = new Textos();
+        BDOTextos archivoTextos = new BDOTextos();
         
         if (File.Exists(Application.persistentDataPath + nombreArchivo))
         {
             bf = new BinaryFormatter();
             file = File.Open(Application.persistentDataPath + nombreArchivo, FileMode.Open);
-            archivoTextos = (Textos)bf.Deserialize(file);
+            archivoTextos = (BDOTextos)bf.Deserialize(file);
             file.Close();
         }
         //recorremos array en busca de la id
-        foreach (Texto textObj in archivoTextos.getAlltext())
+        foreach (TextoObject textObj in archivoTextos.getAlltext())
         {
             if (textObj.getID().Equals(id))
             {//busqueda con exito
@@ -85,17 +85,17 @@ public class TraductorIdiomas : MonoBehaviour
 
 
     [System.Serializable]
-    private class Textos
+    private class BDOTextos
     {
         private int idioma;
         private ArrayList textosArray;
 
-        public Textos(int idioma, ArrayList textosArray)
+        public BDOTextos(int idioma, ArrayList textosArray)
         {
             this.idioma = idioma;
             this.textosArray = textosArray;
         }
-        public Textos()
+        public BDOTextos()
         {
 
         }
@@ -111,11 +111,11 @@ public class TraductorIdiomas : MonoBehaviour
     }
 
     [System.Serializable]
-    private class Texto
+    private class TextoObject
     {
         private string id;
         private string contenido;
-        public Texto(string id,string contenido)
+        public TextoObject(string id,string contenido)
         {
             this.id = id;
             this.contenido = contenido;

@@ -5,6 +5,7 @@ using static SettingsLocal;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using static SaveLoadLocal;
 
 public class InterfazMainMenu : MonoBehaviour
 {
@@ -45,9 +46,51 @@ public class InterfazMainMenu : MonoBehaviour
         transform.Find("FrameMenu").Find("FrameInicio").gameObject.SetActive(false);
         transform.Find("Sonidos").Find("ClickBasic1").GetComponent<AudioSource>().Play();
     }
+    public void buttonAbrirLoadGame()
+    {
+        mostrarDatosGuardados(0);
+        transform.Find("FrameMenu").Find("FrameCargarPartida").gameObject.SetActive(true);
+        transform.Find("FrameMenu").Find("FrameInicio").gameObject.SetActive(false);
+        transform.Find("Sonidos").Find("ClickBasic1").GetComponent<AudioSource>().Play();
+    }
+    public void buttonAdelanteSlot()
+    {
+        try
+        {//la label ya tiene +1 para no mostrar un 0, no es necesario sumarlo aqui
+            mostrarDatosGuardados(Int32.Parse(transform.Find("FrameMenu").Find("FrameCargarPartida").Find("LabelContador").GetComponent<TextMeshProUGUI>().text));
+        }catch(Exception e)
+        {//si desbordamos el array volvemos al inicio
+            mostrarDatosGuardados(0);
+        }
+    }
+    public void buttonAtrasSlot()
+    {
+        try
+        {
+            mostrarDatosGuardados(Int32.Parse(transform.Find("FrameMenu").Find("FrameCargarPartida").Find("LabelContador").GetComponent<TextMeshProUGUI>().text)-2);
+        }
+        catch (Exception e)
+        {//si desbordamos el array volvemos al final
+            mostrarDatosGuardados(transform.GetComponent<SaveLoadLocal>().numeroSlots()-1);
+        }
+    }
+    private void mostrarDatosGuardados(int n)
+    {
+        GameSlot juegoGuardado = transform.GetComponent<SaveLoadLocal>().getArchivo(n);
+        transform.Find("FrameMenu").Find("FrameCargarPartida").Find("LabelDate").GetComponent<TextMeshProUGUI>().SetText(juegoGuardado.getfechaCreacion());
+        transform.Find("FrameMenu").Find("FrameCargarPartida").Find("LabelNombre").GetComponent<TextMeshProUGUI>().SetText(juegoGuardado.getNombre());
+        transform.Find("FrameMenu").Find("FrameCargarPartida").Find("LabelContador").GetComponent<TextMeshProUGUI>().SetText((n+1)+"");
+    }
+
     public void buttonCerrarSettings()
     {
         transform.Find("FrameMenu").Find("FrameSettings").gameObject.SetActive(false);
+        transform.Find("FrameMenu").Find("FrameInicio").gameObject.SetActive(true);
+        transform.Find("Sonidos").Find("ClickCancelar").GetComponent<AudioSource>().Play();
+    }
+    public void buttonCerrarLoadGame()
+    {
+        transform.Find("FrameMenu").Find("FrameCargarPartida").gameObject.SetActive(false);
         transform.Find("FrameMenu").Find("FrameInicio").gameObject.SetActive(true);
         transform.Find("Sonidos").Find("ClickCancelar").GetComponent<AudioSource>().Play();
     }

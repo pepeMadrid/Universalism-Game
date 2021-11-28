@@ -31,22 +31,21 @@ public class SaveLoadLocal : MonoBehaviour
         }
     }
 
-    public GameSlot leerDatosGuardados(string nombre)
+    public GameSlot leerDatosGuardados(string pathEntero)
     {
         BinaryFormatter bf;
         FileStream file;
         GameSlot datos = new GameSlot();
 
-        if (File.Exists(Application.persistentDataPath + "/SAVE_" + nombre + ".f1rstree"))
-        {
-            bf = new BinaryFormatter();
-            file = File.Open(Application.persistentDataPath + nombre, FileMode.Open);
-            datos = (GameSlot)bf.Deserialize(file);
-            file.Close();
-        }
+        bf = new BinaryFormatter();
+        file = File.Open(pathEntero, FileMode.Open);
+        datos = (GameSlot)bf.Deserialize(file);
+        file.Close();
 
         return datos;
     }
+
+
     public void guardarDatos(GameSlot configuracion,string nombre)
     {
         if (File.Exists(Application.persistentDataPath + "/SAVE_" + nombre + ".f1rstree"))
@@ -57,6 +56,32 @@ public class SaveLoadLocal : MonoBehaviour
             bf.Serialize(file, configuracion);
             file.Close();
         }
+    }
+
+    public GameSlot getArchivo(int n)
+    {
+        string[] archivos = Directory.GetFiles(Application.persistentDataPath);
+        ArrayList saveSlots = new ArrayList();
+        foreach (string fileName in archivos)
+        {
+            if (fileName.Contains("SAVE_"))
+                saveSlots.Add(fileName);
+        }
+        return leerDatosGuardados(saveSlots[n].ToString());
+    }
+
+    public int numeroSlots()
+    {
+        string[] archivos = Directory.GetFiles(Application.persistentDataPath);
+        int cantidad=0;
+        foreach (string fileName in archivos)
+        {
+            if (fileName.Contains("SAVE_"))
+            {
+                cantidad++;
+            }
+        }
+        return cantidad;
     }
 
     [System.Serializable]
