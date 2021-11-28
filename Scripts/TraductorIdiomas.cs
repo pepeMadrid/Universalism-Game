@@ -56,7 +56,6 @@ public class TraductorIdiomas : MonoBehaviour
     public string busquedaPorID(string id)
     {//Search a una BD orientada a objetos
         string nombreArchivo = archivoIngles;
-        print("settings " + transform.GetComponent<SettingsLocal>().leerSettings().getIdioma());
         if (transform.GetComponent<SettingsLocal>().leerSettings().getIdioma() == 0)
             nombreArchivo = archivoIngles;
         else if (transform.GetComponent<SettingsLocal>().leerSettings().getIdioma() == 1)
@@ -73,15 +72,11 @@ public class TraductorIdiomas : MonoBehaviour
             archivoTextos = (Textos)bf.Deserialize(file);
             file.Close();
         }
-        print("Archivo "+ archivoTextos.getIdioma());
         //recorremos array en busca de la id
         foreach (Texto textObj in archivoTextos.getAlltext())
         {
-            print("busquedas " + textObj.getID());
-
             if (textObj.getID().Equals(id))
             {//busqueda con exito
-                print("nice");
                 return textObj.getContenido();
             }
         }
