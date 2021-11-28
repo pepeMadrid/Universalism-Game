@@ -49,23 +49,29 @@ public class SettingsLocal : MonoBehaviour
 
     public void guardarSettings(Settings configuracion)
     {
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + nombreArchivo);
+        if (File.Exists(Application.persistentDataPath + nombreArchivo))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Create(Application.persistentDataPath + nombreArchivo);
 
-        bf.Serialize(file, configuracion);
-        file.Close();
+            bf.Serialize(file, configuracion);
+            file.Close();
+        }
     }
+
 
     [System.Serializable]
     public class Settings
     {
         private int idioma; //0 ingles - 1 español ....
-        private int volumen; //0-100
+        private float volumenMusica; //0-1
+        private float volumenSonidos; //0-1
         //.....
         public Settings ()
         { //valores defecto
-            idioma = 0;
-            volumen = 100;
+            this.idioma = 0;
+            this.volumenMusica = 1;
+            this.volumenSonidos = 1;
             //.....
         }
 
@@ -77,14 +83,21 @@ public class SettingsLocal : MonoBehaviour
         {
             return this.idioma;
         }
-        public void setVolumen(int n)
+        public void setVolumenMusica(float n)
         {
-            this.volumen = n;
+            this.volumenMusica = n;
         }
-        public int getVolumen()
+        public float getVolumenMusica()
         {
-            return this.volumen;
+            return this.volumenMusica;
         }
-
+        public void setVolumenSonidos(float n)
+        {
+            this.volumenSonidos = n;
+        }
+        public float getVolumenSonidos()
+        {
+            return this.volumenSonidos;
+        }
     }
 }
