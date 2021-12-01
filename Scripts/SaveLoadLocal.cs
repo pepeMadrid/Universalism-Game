@@ -3,12 +3,71 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-
+using UnityEngine.SceneManagement;
 
 public class SaveLoadLocal : MonoBehaviour
 {
+    private readonly string archivoSlotAux = "/AuxGameSlot.f1rstree";
 
 
+    void Awake()
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "MainMenu":
+                crearGameSlotAux();
+                break;
+            case "MapaEstelar":
+               
+                break;
+
+        }
+    }
+
+    private void crearGameSlotAux()
+    {
+        //archivo para autoguardado y uso entre escenas
+        if (!File.Exists(Application.persistentDataPath + archivoSlotAux))
+        {
+            BinaryFormatter bf;
+            FileStream file;
+            GameSlot slotAux = new GameSlot();
+            bf = new BinaryFormatter();
+
+            file = File.Create(Application.persistentDataPath + archivoSlotAux);
+            bf.Serialize(file, slotAux);
+            file.Close();
+        }
+    }
+
+    public void volcadoGameToAux(string nombre) {
+        //volcado de un gameslot al archivo auxiliar, usado antes de la carga de una nueva escena
+        if (File.Exists(Application.persistentDataPath + archivoSlotAux))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Create(Application.persistentDataPath + archivoSlotAux);
+
+            bf.Serialize(file, leerDatosGuardados(Application.persistentDataPath + "/SAVE_" + nombre + ".f1rstree"));
+            file.Close();
+        }
+    }
+
+    public GameSlot cargarJuego()
+    {
+        //al cargar escena uso del archivo auxiliar 
+        BinaryFormatter bf;
+        FileStream file;
+        GameSlot slotAux = new GameSlot();
+
+        bf = new BinaryFormatter();
+        file = File.Open(Application.persistentDataPath + archivoSlotAux, FileMode.Open);
+        slotAux = (GameSlot)bf.Deserialize(file);
+        file.Close();
+
+        return slotAux;
+    }
+
+    
     public int crearArchivo(string nombre,string fecha)
     {
         //si no existe el archivo lo crearemos y guardaremos los valores por defecto
@@ -46,14 +105,14 @@ public class SaveLoadLocal : MonoBehaviour
     }
 
 
-    public void guardarDatos(GameSlot configuracion,string nombre)
+    public void guardarDatos(GameSlot gameSave,string nombre)
     {
         if (File.Exists(Application.persistentDataPath + "/SAVE_" + nombre + ".f1rstree"))
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Create(Application.persistentDataPath + "/SAVE_" + nombre + ".f1rstree");
 
-            bf.Serialize(file, configuracion);
+            bf.Serialize(file, gameSave);
             file.Close();
         }
     }

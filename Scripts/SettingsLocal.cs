@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.AI;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class SettingsLocal : MonoBehaviour
 {
@@ -11,7 +12,12 @@ public class SettingsLocal : MonoBehaviour
 
     void Awake()
     {
-        crearArchivo();
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "MainMenu":
+                crearArchivo();
+                break;
+        }
     }
 
     private void crearArchivo()

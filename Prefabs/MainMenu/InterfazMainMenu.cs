@@ -6,12 +6,20 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using static SaveLoadLocal;
+using UnityEngine.SceneManagement;
 
 public class InterfazMainMenu : MonoBehaviour
 {
+    private AsyncOperation cargandoProgreso;
+
     private void Awake()
     {
-        settingsActivar();
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "MainMenu":
+                settingsActivar();
+                break;
+        }
     }
 
     public void buttonAbrirMainMenu()
@@ -127,10 +135,12 @@ public class InterfazMainMenu : MonoBehaviour
         switch (settingsGuardados.getIdioma())
         {
             case 0://ingles activado
+                print("ingles");
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaEsp").Find("RadioActivado").gameObject.SetActive(false);
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaIngles").Find("RadioActivado").gameObject.SetActive(true);
             break;
             case 1://español activado
+                print("ESP");
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaIngles").Find("RadioActivado").gameObject.SetActive(false);
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaEsp").Find("RadioActivado").gameObject.SetActive(true);
             break;
@@ -167,12 +177,17 @@ public class InterfazMainMenu : MonoBehaviour
     public void crearPartida()
     {
         int codigoError;
-        if (!String.IsNullOrWhiteSpace(transform.Find("FrameMenu").Find("FrameCrearPartida").Find("NombreText").Find("TextArea").Find("Text").GetComponent<TextMeshProUGUI>().text))
+        if (!String.IsNullOrWhiteSpace(transform.Find("FrameMenu").Find("FrameCrearPartida").Find("NombreText").Find("Text").GetComponent<Text>().text))
         {
-            codigoError = transform.GetComponent<SaveLoadLocal>().crearArchivo(transform.Find("FrameMenu").Find("FrameCrearPartida").Find("NombreText").Find("TextArea").Find("Text").GetComponent<TextMeshProUGUI>().text, DateTime.Now + "");
+            codigoError = transform.GetComponent<SaveLoadLocal>().crearArchivo(transform.Find("FrameMenu").Find("FrameCrearPartida").Find("NombreText").Find("Text").GetComponent<Text>().text, DateTime.Now + "");
             if (codigoError == 0)
-            {
-                //cargamos escena inicial
+            { //escenaInicial
+                transform.Find("FrameMenu").gameObject.SetActive(false);
+                transform.Find("ButtonActivarMenu").gameObject.SetActive(false);
+                transform.Find("FrameCargando").gameObject.SetActive(true);
+                transform.GetComponent<SaveLoadLocal>().volcadoGameToAux(transform.Find("FrameMenu").Find("FrameCrearPartida").Find("NombreText").Find("Text").GetComponent<Text>().text);
+                cargandoProgreso = SceneManager.LoadSceneAsync("MapaEstelar");
+                StartCoroutine(mostrarProgresoCargando());
             }
             else
             {
@@ -184,6 +199,14 @@ public class InterfazMainMenu : MonoBehaviour
         }
     }
 
+
+
+    private IEnumerator mostrarProgresoCargando()
+    {
+        yield return new WaitForSeconds(0.5f);
+        transform.Find("FrameCargando").Find("SliderCargando").GetComponent<Slider>().value = cargandoProgreso.progress;
+        StartCoroutine(mostrarProgresoCargando());
+    }
 
 
 }

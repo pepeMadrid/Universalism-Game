@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class TraductorIdiomas : MonoBehaviour
 {
@@ -11,7 +12,12 @@ public class TraductorIdiomas : MonoBehaviour
 
     void Awake()
     {
-        inicializamosTextosEnArchivos();
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "MainMenu":
+                inicializamosTextosEnArchivos();
+                break;
+        } 
     }
 
 
