@@ -8,3 +8,6 @@
 *.ogg
 *.mp3
 *.jpg
+*.mat
+*.FBX
+*.ttf

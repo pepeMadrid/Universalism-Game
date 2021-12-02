@@ -135,12 +135,10 @@ public class InterfazMainMenu : MonoBehaviour
         switch (settingsGuardados.getIdioma())
         {
             case 0://ingles activado
-                print("ingles");
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaEsp").Find("RadioActivado").gameObject.SetActive(false);
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaIngles").Find("RadioActivado").gameObject.SetActive(true);
             break;
             case 1://español activado
-                print("ESP");
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaIngles").Find("RadioActivado").gameObject.SetActive(false);
                 transform.Find("FrameMenu").Find("FrameSettings").Find("ButtonIdiomaEsp").Find("RadioActivado").gameObject.SetActive(true);
             break;
